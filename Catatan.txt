@@ -1,0 +1,60 @@
+Membuat Login Multi Level 
+-------------------------------------
+1. php artisan make:seeder UserData
+2. php artisan db:seed --class=UserData
+3. php artisan make:middleware CekUserLogin
+4. php artisan make:controller LoginController
+5. php artisan make:controller Beranda
+6. php artisan make:controller Kasir
+
+Modif Model User
+-------------------------------------
+protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'username',
+        'level',
+    ];
+
+Modif Migration create_users_table.php
+--------------------------------------
+1. tambahkan field username dan level
+
+2. Buat Dabase Seeders UserData.php
+--------------------------------------
+ public function run(): void
+    {
+        $user =[
+            [
+                'name' => 'Administrator',
+                'username' => 'admin',
+                'password' => bcrypt('123456'),
+                'level'    => 1,
+                'email'    => 'herianto.sy@gmail.com'
+            ],
+            [
+                'name' => 'Kasir',
+                'username' => 'kasir',
+                'password' => bcrypt('123456'),
+                'level'    => 2,
+                'email'    => 'kasir@gmail.com'
+            ],
+            [
+                'name' => 'Pimpinan',
+                'username' => 'pimpinan',
+                'password' => bcrypt('123456'),
+                'level'    => 3,
+                'email'    => 'pimpinan@gmail.com'
+            ]
+
+        ];
+
+        foreach ($user as $key => $value){
+                User::create($value);
+        }
+    }
+
+3. App/Http/Kernel.php
+-------------------------------------------------------------
+ 'CekUserLogin' => \App\Http\Middleware\CekUserLogin::class,
